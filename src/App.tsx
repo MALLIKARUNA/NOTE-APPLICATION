@@ -1,14 +1,22 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 const App = () => {
   const [title, setTitle] = useState('')
   const [details, setDetails] = useState('')
-  const [task, setTask] = useState<
-    { title: string; details: string }[]
-  >([])
+
+  // Load saved notes from localStorage
+  const [task, setTask] = useState(() => {
+    const savedNotes = localStorage.getItem('notes')
+    return savedNotes ? JSON.parse(savedNotes) : []
+  })
+
+  // Save notes whenever task changes
+  useEffect(() => {
+    localStorage.setItem('notes', JSON.stringify(task))
+  }, [task])
 
   // Add Note
-  const Handler = (e: React.FormEvent) => {
+  const Handler = (e) => {
     e.preventDefault()
 
     if (!title.trim() || !details.trim()) {
@@ -25,8 +33,8 @@ const App = () => {
     setDetails('')
   }
 
-  // Delete One Note
-  const deleteNote = (id: number) => {
+  // Delete one note
+  const deleteNote = (id) => {
     const filteredTask = task.filter((_, index) => index !== id)
     setTask(filteredTask)
   }
