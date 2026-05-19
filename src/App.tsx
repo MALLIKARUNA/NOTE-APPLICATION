@@ -3,10 +3,12 @@ import React, { useState } from 'react'
 const App = () => {
   const [title, setTitle] = useState('')
   const [details, setDetails] = useState('')
-  const [task, setTask] = useState([])
+  const [task, setTask] = useState<
+    { title: string; details: string }[]
+  >([])
 
   // Add Note
-  const Handler = (e) => {
+  const Handler = (e: React.FormEvent) => {
     e.preventDefault()
 
     if (!title.trim() || !details.trim()) {
@@ -24,7 +26,7 @@ const App = () => {
   }
 
   // Delete One Note
-  const deleteNote = (id) => {
+  const deleteNote = (id: number) => {
     const filteredTask = task.filter((_, index) => index !== id)
     setTask(filteredTask)
   }
