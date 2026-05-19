@@ -1,22 +1,27 @@
 import React, { useEffect, useState } from 'react'
 
+type Note = {
+  title: string
+  details: string
+}
+
 const App = () => {
   const [title, setTitle] = useState('')
   const [details, setDetails] = useState('')
 
-  // Load saved notes from localStorage
-  const [task, setTask] = useState(() => {
+  // Load notes from localStorage
+  const [task, setTask] = useState<Note[]>(() => {
     const savedNotes = localStorage.getItem('notes')
     return savedNotes ? JSON.parse(savedNotes) : []
   })
 
-  // Save notes whenever task changes
+  // Save notes to localStorage
   useEffect(() => {
     localStorage.setItem('notes', JSON.stringify(task))
   }, [task])
 
-  // Add Note
-  const Handler = (e) => {
+  // Add note
+  const Handler = (e: React.FormEvent) => {
     e.preventDefault()
 
     if (!title.trim() || !details.trim()) {
@@ -24,17 +29,15 @@ const App = () => {
       return
     }
 
-    const copyTask = [...task]
-
-    copyTask.push({ title, details })
-    setTask(copyTask)
+    const newTask = [...task, { title, details }]
+    setTask(newTask)
 
     setTitle('')
     setDetails('')
   }
 
   // Delete one note
-  const deleteNote = (id) => {
+  const deleteNote = (id: number) => {
     const filteredTask = task.filter((_, index) => index !== id)
     setTask(filteredTask)
   }
@@ -50,7 +53,7 @@ const App = () => {
         <h1 className='text-3xl font-bold'>Add Notes</h1>
 
         <input
-          type="text"
+          type='text'
           className='px-5 outline-none w-full font-medium py-3 border-2 rounded bg-transparent'
           placeholder='ENTER TITLE NAME'
           value={title}
@@ -103,7 +106,6 @@ const App = () => {
           )}
         </div>
       </div>
-
     </div>
   )
 }
